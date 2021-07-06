@@ -1,16 +1,13 @@
 package br.com.lucad.myolxapp.ui.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +22,7 @@ import java.util.Objects;
 import br.com.lucad.myolxapp.R;
 import br.com.lucad.myolxapp.helper.FirebaseHelper;
 
-public class MainActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private Button buttonAcess;
     private EditText emailField, passwordField;
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signup);
 
         initializeComponents();
         firebaseAuth = FirebaseHelper.getFirebaseAuth();
@@ -50,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             String password = passwordField.getText().toString();
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(MainActivity.this, "Preencha os campos!", Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, "Preencha os campos!", Toast.LENGTH_LONG).show();
             } else {
                 if (acessType.isChecked()) {
                     singUpUser(email, password);
@@ -67,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 password
         ).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
-                Toast.makeText(MainActivity.this, "Erro ao fazer Login: " + task.getException(), Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, "Erro ao fazer Login: " + task.getException(), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(MainActivity.this, "Logado com sucesso!", Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, "Logado com sucesso!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -81,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
         ).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 signUpException(task);
-                Toast.makeText(MainActivity.this, signUpException(task), Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, signUpException(task), Toast.LENGTH_LONG).show();
             } else {
 
-                Toast.makeText(MainActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_LONG).show();
+                Toast.makeText(SignUpActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_LONG).show();
             }
         });
     }
