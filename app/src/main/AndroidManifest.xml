@@ -11,6 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyOlxApp">
+        <activity android:name=".ui.activity.AddProductActivity"></activity>
+        <activity
+            android:name=".ui.activity.MyProductsActivity"
+            android:label="@string/title_activity_my_products"
+            android:theme="@style/Theme.MyOlxApp.NoActionBar" />
         <activity android:name=".ui.activity.SignUpActivity" />
         <activity android:name=".ui.activity.AnuncioActivity">
             <intent-filter>

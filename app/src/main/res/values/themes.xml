@@ -6,10 +6,19 @@
         <item name="colorPrimaryDark">@color/purple_primary_dark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    
+
     <style name="buttonDefault" parent="Theme.MaterialComponents.Light">
         <item name="colorControlHighlight">#D500F9</item>
         <item name="colorButtonNormal">@color/purple_primary</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Theme.MyOlxApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MyOlxApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MyOlxApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

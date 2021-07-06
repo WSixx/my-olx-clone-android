@@ -2,6 +2,7 @@ package br.com.lucad.myolxapp.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,6 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Erro ao fazer Login: " + task.getException(), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(SignUpActivity.this, "Logado com sucesso!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), AnuncioActivity.class));
             }
         });
     }
