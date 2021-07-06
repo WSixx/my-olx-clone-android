@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 import br.com.lucad.myolxapp.R;
+import br.com.lucad.myolxapp.helper.FirebaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeComponents();
-
+        firebaseAuth = FirebaseHelper.getFirebaseAuth();
         buttonAcessClick();
 
     }
@@ -54,8 +55,21 @@ public class MainActivity extends AppCompatActivity {
                 if (acessType.isChecked()) {
                     singUpUser(email, password);
                 } else {
-                    //Login
+                    signIn(email, password);
                 }
+            }
+        });
+    }
+
+    private void signIn(String email, String password) {
+        firebaseAuth.signInWithEmailAndPassword(
+                email,
+                password
+        ).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Toast.makeText(MainActivity.this, "Erro ao fazer Login: " + task.getException(), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Logado com sucesso!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -64,15 +78,13 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.createUserWithEmailAndPassword(
                 email,
                 password
-        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    signUpException(task);
-                    Toast.makeText(MainActivity.this, signUpException(task), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_LONG).show();
-                }
+        ).addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                signUpException(task);
+                Toast.makeText(MainActivity.this, signUpException(task), Toast.LENGTH_LONG).show();
+            } else {
+
+                Toast.makeText(MainActivity.this, "Cadastro realizado com sucesso", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -91,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             errorException = "error : " + e.getMessage();
             e.printStackTrace();
-        } finally {
-            return errorException;
         }
+        return errorException;
+
     }
 
     private void initializeComponents() {
