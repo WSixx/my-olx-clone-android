@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "4961411738",
+    "project_id": "my-olx-clone-35dfa",
+    "storage_bucket": "my-olx-clone-35dfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4961411738:android:349c0b8d20d8e2ba947523",
+        "android_client_info": {
+          "package_name": "br.com.lucad.myolxapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4961411738-13r73712bc5lrcemescte4nqvr7bo2uh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-YpVrDDkVP3QGztw6J8JRGKDdE12peAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4961411738-13r73712bc5lrcemescte4nqvr7bo2uh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
