@@ -11,27 +11,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal"
         android:layout_marginBottom="16dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/padrao"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:src="@drawable/padrao" />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/padrao"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:src="@drawable/padrao" />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/padrao"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:src="@drawable/padrao" />
 
     </LinearLayout>
 
@@ -44,46 +44,59 @@
         <Spinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <Spinner
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
-    <TextView
+    <EditText
+        android:id="@+id/edit_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_edit_text"
         android:layout_marginBottom="16dp"
-        android:padding="10dp"
-        android:hint="Titulo"/>
+        android:background="@drawable/bg_edit_text"
+        android:hint="Titulo"
+        android:padding="10dp" />
 
-    <TextView
+    <com.blackcat.currencyedittext.CurrencyEditText
+        android:id="@+id/edit_valor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_edit_text"
         android:layout_marginBottom="16dp"
-        android:padding="10dp"
+        android:background="@drawable/bg_edit_text"
         android:hint="Valor"
-        android:inputType="numberDecimal"
-        />
+        android:padding="10dp" />
 
-    <TextView
+    <com.santalu.maskara.widget.MaskEditText
+        android:id="@+id/edit_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_edit_text"
+        android:hint="Telefone"
+        android:inputType="phone"
+        app:mask="(##) # ####-####"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/edit_descricao"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:background="@drawable/bg_edit_text"
         android:layout_marginBottom="16dp"
-        android:padding="10dp"
+        android:background="@drawable/bg_edit_text"
         android:hint="Descrição"
-        />
+        android:padding="10dp" />
 
     <Button
+        android:id="@+id/button_save_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cadastrar Anúncio"
-        android:theme="@style/buttonDefault"/>
+        android:theme="@style/buttonDefault"
+        android:onClick="saveProduct"/>
 
 </LinearLayout>
