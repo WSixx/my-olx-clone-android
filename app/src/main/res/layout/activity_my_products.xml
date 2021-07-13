@@ -22,7 +22,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <include layout="@layout/content_my_products2" />
+    <include layout="@layout/content_my_products" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
