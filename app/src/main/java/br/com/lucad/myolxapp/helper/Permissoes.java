@@ -3,15 +3,13 @@ package br.com.lucad.myolxapp.helper;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by jamiltondamasceno
- */
+import static androidx.core.app.ActivityCompat.requestPermissions;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
+
 
 public class Permissoes {
 
@@ -25,7 +23,7 @@ public class Permissoes {
             verificando uma a uma
             * se já tem a permissao liberada */
             for ( String permissao : permissoes ){
-                Boolean temPermissao = ContextCompat.checkSelfPermission(activity, permissao) == PackageManager.PERMISSION_GRANTED;
+                Boolean temPermissao = checkSelfPermission(activity, permissao) == PackageManager.PERMISSION_GRANTED;
                 if ( !temPermissao ) listaPermissoes.add(permissao);
             }
 
@@ -35,7 +33,7 @@ public class Permissoes {
             listaPermissoes.toArray( novasPermissoes );
 
             //Solicita permissão
-            ActivityCompat.requestPermissions(activity, novasPermissoes, requestCode );
+            requestPermissions(activity, novasPermissoes, requestCode );
 
 
         }

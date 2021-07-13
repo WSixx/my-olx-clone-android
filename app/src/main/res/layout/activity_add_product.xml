@@ -16,18 +16,21 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/image_cadastro_1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/padrao" />
 
         <ImageView
+            android:id="@+id/image_cadastro_2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/padrao" />
 
         <ImageView
+            android:id="@+id/image_cadastro_3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -42,11 +45,13 @@
         android:orientation="horizontal">
 
         <Spinner
+            android:id="@+id/spinner_estado"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Spinner
+            android:id="@+id/spinner_categoria"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
@@ -97,6 +102,6 @@
         android:layout_height="wrap_content"
         android:text="Cadastrar Anúncio"
         android:theme="@style/buttonDefault"
-        android:onClick="saveProduct"/>
+        android:onClick="validarDadosAnuncio"/>
 
 </LinearLayout>
