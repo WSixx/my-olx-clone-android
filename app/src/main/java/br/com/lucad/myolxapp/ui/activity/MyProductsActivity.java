@@ -3,6 +3,8 @@ package br.com.lucad.myolxapp.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +29,7 @@ import br.com.lucad.myolxapp.R;
 import br.com.lucad.myolxapp.adapter.AdapterAnuncios;
 import br.com.lucad.myolxapp.helper.Constants;
 import br.com.lucad.myolxapp.helper.FirebaseHelper;
+import br.com.lucad.myolxapp.helper.RecyclerItemClickListener;
 import br.com.lucad.myolxapp.model.Anuncio;
 
 public class MyProductsActivity extends AppCompatActivity {
@@ -58,6 +61,33 @@ public class MyProductsActivity extends AppCompatActivity {
         configuraRecycleView();
         recuperaAnuncios();
 
+        reclycleItemClick();
+
+    }
+
+    private void reclycleItemClick() {
+        recyclerAnuncios.addOnItemTouchListener(new RecyclerItemClickListener(
+                this,
+                recyclerAnuncios,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        Anuncio anuncioSelecionado = anuncios.get(position);
+                        anuncioSelecionado.remover();
+                        adapterAnuncios.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    }
+                }
+        ));
     }
 
     private void configuracaoInicial() {

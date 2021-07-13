@@ -92,7 +92,6 @@ public class Anuncio {
     public void salvar() {
 
         String idUsuario = FirebaseHelper.getIdUsuario();
-
         DatabaseReference anuncioRef = FirebaseHelper.getFirebaseReference()
                 .child(Constants.MEUS_ANUNCIOS);
 
@@ -112,6 +111,25 @@ public class Anuncio {
                 .child(getCategoria())
                 .child(getIdAnuncio())
                 .setValue(this);
+    }
+
+    public void remover() {
+        String idUsuario = FirebaseHelper.getIdUsuario();
+        DatabaseReference anuncioRef = FirebaseHelper.getFirebaseReference()
+                .child(Constants.MEUS_ANUNCIOS)
+                .child(idUsuario)
+                .child(getIdAnuncio());
+        anuncioRef.removeValue();
+        removerAnucioPublico();
+    }
+
+    public void removerAnucioPublico() {
+        DatabaseReference anuncioRef = FirebaseHelper.getFirebaseReference()
+                .child(Constants.ANUNCIOS)
+                .child(getEstado())
+                .child(getCategoria())
+                .child(getIdAnuncio());
+        anuncioRef.removeValue();
     }
 
 }
