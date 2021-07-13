@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -37,12 +39,21 @@ public class AdapterAnuncios extends RecyclerView.Adapter<AdapterAnuncios.MyView
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AdapterAnuncios.MyViewHolder holder, int position) {
+        Anuncio anuncio = anuncios.get(position);
+        holder.titulo.setText(anuncio.getTitulo());
+        holder.valor.setText(anuncio.getValor());
+
+        //Primeira Imagem Cadastrada
+        List<String> urlPhotos = anuncio.getFotos();
+        String urlCapa = urlPhotos.get(0);
+
+        Picasso.get().load(urlCapa).into(holder.foto);
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return anuncios.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
