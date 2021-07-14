@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -45,6 +45,10 @@ public class AnuncioActivity extends AppCompatActivity {
     private DatabaseReference anunciosPublicosRef;
     private AlertDialog alertDialog;
     private Spinner spinnerFiltro;
+    private Spinner spinnerCategoria;
+    private String filtroEstado = "";
+    private String filtroCategoria = "";
+    private Boolean filtrandoEstado = false;
 
 
     @Override
@@ -59,7 +63,7 @@ public class AnuncioActivity extends AppCompatActivity {
     }
 
     public void filtrarEstado(View view) {
-        AlertDialog.Builder dialogEstado = createAlertDialogEstado();
+        AlertDialog.Builder dialogEstado = createAlertDialog("Selecione um estado");
 
         spinnerEstadoConfig(dialogEstado);
 
@@ -69,6 +73,24 @@ public class AnuncioActivity extends AppCompatActivity {
         AlertDialog alertDialog = dialogEstado.create();
         alertDialog.show();
     }
+
+    public void filtrarCategoria(View view) {
+
+        if (filtrandoEstado == false) {
+            Toast.makeText(this, "Escolha uma região antes", Toast.LENGTH_SHORT).show();
+        } else {
+            AlertDialog.Builder dialogCategoria = createAlertDialog("Selecione uma categoria");
+
+            spinnerCategoriaConfig(dialogCategoria);
+
+            dialogCategoriaConfirmButton(dialogCategoria);
+            dialogCategoriaNegativeButton(dialogCategoria);
+
+            AlertDialog alertDialog = dialogCategoria.create();
+            alertDialog.show();
+        }
+    }
+
 
     private void spinnerEstadoConfig(AlertDialog.Builder dialogEstado) {
         View viewSpinner = getLayoutInflater().inflate(R.layout.dialog_spinner, null);
@@ -84,22 +106,50 @@ public class AnuncioActivity extends AppCompatActivity {
         spinnerFiltro.setAdapter(adapter);
     }
 
+    private void spinnerCategoriaConfig(AlertDialog.Builder dialogCategoria) {
+        View viewSpinner = getLayoutInflater().inflate(R.layout.dialog_spinner, null);
+        dialogCategoria.setView(viewSpinner);
+        spinnerFiltro = viewSpinner.findViewById(R.id.spinner_categoria);
+        String[] categorias = getResources().getStringArray(R.array.categoria);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                categorias
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFiltro.setAdapter(adapter);
+    }
+
+    private void dialogCategoriaNegativeButton(AlertDialog.Builder dialogCategoria) {
+        dialogCategoria.setNegativeButton("Cancelar", (dialog, which) -> {
+        });
+    }
+
+    private void dialogCategoriaConfirmButton(AlertDialog.Builder dialogCategoria) {
+        dialogCategoria.setPositiveButton("OK", (dialog, which) -> {
+            filtroCategoria = spinnerCategoria.getSelectedItem().toString();
+            recuperarAnunciosPorCategoria();
+        });
+    }
+
     private void dialogEstadoNegativeButton(AlertDialog.Builder dialogEstado) {
         dialogEstado.setNegativeButton("Cancelar", (dialog, which) -> {
-
         });
     }
 
     private void dialogEstadoConfirmButton(AlertDialog.Builder dialogEstado) {
         dialogEstado.setPositiveButton("OK", (dialog, which) -> {
-
+            filtroEstado = spinnerFiltro.getSelectedItem().toString();
+            recuperarAnunciosPorEstado();
+            filtrandoEstado = true;
         });
     }
 
+
     @NotNull
-    private AlertDialog.Builder createAlertDialogEstado() {
+    private AlertDialog.Builder createAlertDialog(String title) {
         AlertDialog.Builder dialogEstado = new AlertDialog.Builder(this);
-        dialogEstado.setTitle("Selecione o estado");
+        dialogEstado.setTitle(title);
         return dialogEstado;
     }
 
@@ -107,6 +157,59 @@ public class AnuncioActivity extends AppCompatActivity {
         firebaseAuth = FirebaseHelper.getFirebaseAuth();
         anunciosPublicosRef = FirebaseHelper.getFirebaseReference()
                 .child(Constants.ANUNCIOS);
+    }
+
+    private void recuperarAnunciosPorEstado() {
+        anunciosPublicosRef = FirebaseHelper.getFirebaseReference()
+                .child(Constants.ANUNCIOS)
+                .child(filtroEstado);
+        anunciosPublicosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                myDialog();
+                limparLista();
+                for (DataSnapshot categorias : snapshot.getChildren()) {
+                    for (DataSnapshot anuncios : categorias.getChildren()) {
+                        Anuncio anuncio = anuncios.getValue(Anuncio.class);
+                        listaAnuncios.add(anuncio);
+                    }
+                }
+                Collections.reverse(listaAnuncios);
+                adapterAnuncios.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void recuperarAnunciosPorCategoria() {
+        anunciosPublicosRef = FirebaseHelper.getFirebaseReference()
+                .child(Constants.ANUNCIOS)
+                .child(filtroEstado)
+                .child(filtroCategoria);
+        anunciosPublicosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                myDialog();
+                limparLista();
+                for (DataSnapshot anuncios : snapshot.getChildren()) {
+                    Anuncio anuncio = anuncios.getValue(Anuncio.class);
+                    listaAnuncios.add(anuncio);
+                }
+                Collections.reverse(listaAnuncios);
+                adapterAnuncios.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void recuperarAnunciosPublicos() {
