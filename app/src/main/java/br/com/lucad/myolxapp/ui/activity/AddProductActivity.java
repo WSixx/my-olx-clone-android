@@ -169,18 +169,22 @@ public class AddProductActivity extends AppCompatActivity implements View.OnClic
 
 
     public void saveProduct() {
-        alertDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Salvando Anúncio")
-                .setCancelable(false)
-                .build();
-        alertDialog.show();
+        myDialog();
         //Salvar imagem no Storage
         int listaFotosSize = listaFotosRecuperadas.size();
         for (int i = 0; i < listaFotosSize; i++) {
             String urlImagem = listaFotosRecuperadas.get(i);
             saveFotosStorage(urlImagem, listaFotosSize, i);
         }
+    }
+
+    private void myDialog() {
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Salvando Anúncio")
+                .setCancelable(false)
+                .build();
+        alertDialog.show();
     }
 
     private void saveFotosStorage(String urlImagem, int listaFotosSize, int contador) {

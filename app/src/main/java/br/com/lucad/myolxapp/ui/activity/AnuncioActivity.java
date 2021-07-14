@@ -2,34 +2,147 @@ package br.com.lucad.myolxapp.ui.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import br.com.lucad.myolxapp.R;
+import br.com.lucad.myolxapp.adapter.AdapterAnuncios;
+import br.com.lucad.myolxapp.helper.Constants;
 import br.com.lucad.myolxapp.helper.FirebaseHelper;
+import br.com.lucad.myolxapp.model.Anuncio;
+import dmax.dialog.SpotsDialog;
 
 public class AnuncioActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
+    private RecyclerView recyclerAnunciosPublicos;
+    private Button buttonRegiao, buttonCategoria;
+    private AdapterAnuncios adapterAnuncios;
+    private List<Anuncio> listaAnuncios = new ArrayList<>();
+    private DatabaseReference anunciosPublicosRef;
+    private AlertDialog alertDialog;
+    private Spinner spinnerFiltro;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anuncio);
 
-        firebaseAuth = FirebaseHelper.getFirebaseAuth();
+        initializeComponents();
+        firebaseInit();
+        configuraRecycleView();
+        recuperarAnunciosPublicos();
+    }
 
+    public void filtrarEstado(View view) {
+        AlertDialog.Builder dialogEstado = createAlertDialogEstado();
+
+        spinnerEstadoConfig(dialogEstado);
+
+        dialogEstadoConfirmButton(dialogEstado);
+        dialogEstadoNegativeButton(dialogEstado);
+
+        AlertDialog alertDialog = dialogEstado.create();
+        alertDialog.show();
+    }
+
+    private void spinnerEstadoConfig(AlertDialog.Builder dialogEstado) {
+        View viewSpinner = getLayoutInflater().inflate(R.layout.dialog_spinner, null);
+        dialogEstado.setView(viewSpinner);
+        spinnerFiltro = viewSpinner.findViewById(R.id.spinner_filtro);
+        String[] estados = getResources().getStringArray(R.array.estados);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                estados
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerFiltro.setAdapter(adapter);
+    }
+
+    private void dialogEstadoNegativeButton(AlertDialog.Builder dialogEstado) {
+        dialogEstado.setNegativeButton("Cancelar", (dialog, which) -> {
+
+        });
+    }
+
+    private void dialogEstadoConfirmButton(AlertDialog.Builder dialogEstado) {
+        dialogEstado.setPositiveButton("OK", (dialog, which) -> {
+
+        });
+    }
+
+    @NotNull
+    private AlertDialog.Builder createAlertDialogEstado() {
+        AlertDialog.Builder dialogEstado = new AlertDialog.Builder(this);
+        dialogEstado.setTitle("Selecione o estado");
+        return dialogEstado;
+    }
+
+    private void firebaseInit() {
+        firebaseAuth = FirebaseHelper.getFirebaseAuth();
+        anunciosPublicosRef = FirebaseHelper.getFirebaseReference()
+                .child(Constants.ANUNCIOS);
+    }
+
+    public void recuperarAnunciosPublicos() {
+        myDialog();
+        limparLista();
+        anunciosPublicosRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                for (DataSnapshot estados : snapshot.getChildren()) {
+                    for (DataSnapshot categorias : estados.getChildren()) {
+                        for (DataSnapshot anuncios : categorias.getChildren()) {
+                            Anuncio anuncio = anuncios.getValue(Anuncio.class);
+                            listaAnuncios.add(anuncio);
+                        }
+                    }
+                }
+                Collections.reverse(listaAnuncios);
+                adapterAnuncios.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void limparLista() {
+        listaAnuncios.clear();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_cadastrar:
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
                 break;
@@ -54,11 +167,36 @@ public class AnuncioActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (firebaseAuth.getCurrentUser() == null){
+        if (firebaseAuth.getCurrentUser() == null) {
             menu.setGroupVisible(R.id.group_deslogado, true);
-        }else {
+        } else {
             menu.setGroupVisible(R.id.group_logado, true);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void configuraRecycleView() {
+        recyclerAnunciosPublicos.setLayoutManager(new LinearLayoutManager(this));
+        recyclerAnunciosPublicos.setHasFixedSize(true);
+
+        configuraAdapter();
+    }
+
+    private void configuraAdapter() {
+        adapterAnuncios = new AdapterAnuncios(listaAnuncios, this);
+        recyclerAnunciosPublicos.setAdapter(adapterAnuncios);
+    }
+
+    private void initializeComponents() {
+        recyclerAnunciosPublicos = findViewById(R.id.recycle_anuncios_publicos);
+    }
+
+    private void myDialog() {
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Crregando Anuncios")
+                .setCancelable(false)
+                .build();
+        alertDialog.show();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.lucad.myolxapp.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import br.com.lucad.myolxapp.helper.Constants;
 import br.com.lucad.myolxapp.helper.FirebaseHelper;
 import br.com.lucad.myolxapp.helper.RecyclerItemClickListener;
 import br.com.lucad.myolxapp.model.Anuncio;
+import dmax.dialog.SpotsDialog;
 
 public class MyProductsActivity extends AppCompatActivity {
 
@@ -38,6 +40,7 @@ public class MyProductsActivity extends AppCompatActivity {
     private List<Anuncio> anuncios = new ArrayList<>();
     private AdapterAnuncios adapterAnuncios;
     private DatabaseReference anuncioUsuarioRef;
+    private AlertDialog alertDialog;
 
 
     @Override
@@ -97,6 +100,7 @@ public class MyProductsActivity extends AppCompatActivity {
     }
 
     private void recuperaAnuncios() {
+        myDialog();
         anuncioUsuarioRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
@@ -106,6 +110,7 @@ public class MyProductsActivity extends AppCompatActivity {
                 }
                 Collections.reverse(anuncios);
                 adapterAnuncios.notifyDataSetChanged();
+                alertDialog.dismiss();
             }
 
             @Override
@@ -129,6 +134,15 @@ public class MyProductsActivity extends AppCompatActivity {
 
     private void initializeComponents() {
         recyclerAnuncios = findViewById(R.id.recycle_produtos);
+    }
+
+    private void myDialog() {
+        alertDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Crregando Anuncios")
+                .setCancelable(false)
+                .build();
+        alertDialog.show();
     }
 
 }

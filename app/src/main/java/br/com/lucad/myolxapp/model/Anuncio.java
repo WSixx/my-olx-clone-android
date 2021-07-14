@@ -120,10 +120,10 @@ public class Anuncio {
                 .child(idUsuario)
                 .child(getIdAnuncio());
         anuncioRef.removeValue();
-        removerAnucioPublico();
+        removerAnuncioPublico();
     }
 
-    public void removerAnucioPublico() {
+    public void removerAnuncioPublico() {
         DatabaseReference anuncioRef = FirebaseHelper.getFirebaseReference()
                 .child(Constants.ANUNCIOS)
                 .child(getEstado())
